@@ -59,7 +59,7 @@ jobs:
       # Step 4: Deploy Infrastructure (DNS, CDN, and Storage Blob) via IaC
       - name: Deploy Infrastructure
         run: |
-          aws deployment group create --resource-group <resource-group> --template-file AWS-Cloud-Resume-Challenge/backend/mainTemplate.json
+          aws deployment group create --resource-group <resource-group> --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yaml.json
 
       # Step 5: Purge CloudFront CDN Endpoint
       - name: Purge CDN Endpoint

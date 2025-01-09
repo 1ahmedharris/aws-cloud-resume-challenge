@@ -25,9 +25,7 @@ Resources:
       HostedZoneConfig:
         Comment: ""
       Name: "ahmedharrisresume.com."
-
-
-
+      
 
 Resources:
   S3Bucket00aitcs300Qhs1G:

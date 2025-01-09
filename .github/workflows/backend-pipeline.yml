@@ -56,7 +56,7 @@ jobs:
         with:
           creds: ${{ secrets.AWS_CREDENTIALS }}
 
-      # Step 4: Deploy Infrastructure (DNS, CDN, and Storage Blob) via IaC
+      # Step 4: Deploy Infrastructure (Lamba Function & DynamoDB) via IaC
       - name: Deploy Infrastructure
         run: |
           aws deployment group create --resource-group <resource-group> --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yaml.json

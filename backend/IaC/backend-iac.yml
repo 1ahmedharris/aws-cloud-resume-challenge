@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: 
   AWS SAM Template for a Python Lambda function integrated with DynamoDB.
 Resources:
-  # Define the Lambda Function
+  # Define Python Lambda Function
   MyPythonFunction:
     Type: AWS::Serverless::Function
     Properties:

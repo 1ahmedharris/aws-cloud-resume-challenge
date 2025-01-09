@@ -38,7 +38,9 @@ jobs:
           path: |
             cloud-resume/frontend/index.html
             cloud-resume/frontend/styles.css
-            cloud-resume/frontend/images  # Path to upload specific files in 'cloud-resume/frontend' directory
+            cloud-resume/frontend/images  
+            cloud-resume/frontend/cloud-practitioner.html
+            cloud-resume/frontend/solutions-architect.html
 
   deploy:
     runs-on: ubuntu-latest

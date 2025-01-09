@@ -36,11 +36,7 @@ jobs:
         with:
           name: site-files
           path: |
-            cloud-resume/frontend/index.html
-            cloud-resume/frontend/styles.css
-            cloud-resume/frontend/images  
-            cloud-resume/frontend/cloud-practitioner.html
-            cloud-resume/frontend/solutions-architect.html
+            AWS-Cloud-Resume-Challenge/frontend
 
   deploy:
     runs-on: ubuntu-latest

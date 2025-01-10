@@ -31,3 +31,5 @@ This project is my resume written in HTML and hosted with AWS S3 static website 
 * Terraform IaC
 * Add Profile Page
 * Enhance Website Design
+* Docker App Containerization 
+* Deploy App in Kubernetes(K8s)

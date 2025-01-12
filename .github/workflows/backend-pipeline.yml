@@ -67,7 +67,7 @@ deploy:
           --s3-bucket aitc-s3\
           --output-template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
 
-    # Deploy SAM template
+    # Deploy backend
     - name: Deploy SAM Template
       run: |
         sam deploy \

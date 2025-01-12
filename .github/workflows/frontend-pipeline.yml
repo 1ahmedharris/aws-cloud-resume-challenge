@@ -25,7 +25,7 @@ jobs:
         uses: github/super-linter@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: false  # Ensure it fails the pipeline if there’s a lint error
+        continue-on-error: false  # Ensure pipeline fails if lint error
 
       # Step 3: Build Frontend 
       - name: Build Frontend

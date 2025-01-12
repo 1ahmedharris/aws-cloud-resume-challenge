@@ -1,5 +1,4 @@
 name: Deploy Frontend To S3
-
 on:
   push:
     branches:
@@ -11,6 +10,7 @@ on:
       - main
     paths:
       - 'AWS-Cloud-Resume-Challenge/frontend/**' 
+
 
 jobs:
   build:
@@ -41,6 +41,7 @@ jobs:
           name: site-files
           path: |
             .AWS-Cloud-Resume-Challenge/frontend/build 
+
             
   deploy:
     runs-on: ubuntu-latest
@@ -69,6 +70,7 @@ jobs:
       - name: Deploy Frontend
         run: |
           aws s3 sync ./site-files s3://aitc-s3
+
 
   smoke-test:
     runs-on: ubuntu-latest

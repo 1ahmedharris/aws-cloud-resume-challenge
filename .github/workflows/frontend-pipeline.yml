@@ -16,13 +16,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Run Super Linter 
-      - name: Run Linter
-        uses: github/super-linter@v7
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: false  # Ensure pipeline fails if lint error
-
       # Build Application
       - name: Build Frontend
         run: |
@@ -38,6 +31,28 @@ jobs:
           path: |
             .AWS-Cloud-Resume-Challenge/frontend/build 
 
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Checkout Repository
+      - name: Checkout Code
+        uses: actions/checkout@v4.2
+
+      # Load Build Artifact
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: |
+            site-files
+
+      # Run Super Linter 
+      - name: Run Linter
+        uses: github/super-linter@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: false  # Ensure pipeline fails if lint error
+ 
             
   deploy:
     runs-on: ubuntu-latest

@@ -16,25 +16,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out repository
+      # Check out repository
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Step 2: Run Super Linter 
+      # Run Super Linter 
       - name: Run Linter
         uses: github/super-linter@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: false  # Ensure pipeline fails if lint error
 
-      # Step 3: Build Frontend 
+      # Build Frontend 
       - name: Build Frontend
         run: |
           cd AWS-Cloud-Resume-Challenge/frontend
           npm ci
           npm run build
 
-      # Step 4: Create Artifact for Deploy
+      # Create Artifact for Deploy
       - name: Upload Site Files
         uses: actions/upload-artifact@v4
         with:
@@ -46,18 +46,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Step 1: Check out repository 
+      # Check out repository 
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Step 2: Download the build artifact from build job
+      # Download the build artifact from build job
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: site-files
           path: ./site-files
 
-      # Step 3: Login to AWS
+      # Login to AWS
       - name: AWS Login
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -65,7 +65,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Step 4: Deploy frontend to S3
+      # Deploy frontend to S3
       - name: Deploy Frontend
         run: |
           aws s3 sync ./site-files s3://aitc-s3
@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy
     steps:
-      # Step 1: Run Cypress Tests
+      # Run Cypress Tests
       - name: Run Smoke Tests
         uses: cypress-io/github-action@v4
         with:

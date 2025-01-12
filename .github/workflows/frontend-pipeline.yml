@@ -7,7 +7,6 @@ on:
       - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Run on changes to /frontend
 
 
-
 jobs:
   build:
     runs-on: ubuntu-latest

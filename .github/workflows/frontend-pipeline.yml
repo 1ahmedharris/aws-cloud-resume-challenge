@@ -1,4 +1,4 @@
-name: deploy frontend to s3
+name: Deploy Frontend to S3
 
 on:
   push:

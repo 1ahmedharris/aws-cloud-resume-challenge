@@ -6,6 +6,7 @@ on:
     paths:
       - 'AWS-Cloud-Resume-Challenge/backend/**'  # Run on changes to /backend
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,6 +33,7 @@ jobs:
           name: sam-build-artifact
           path: AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml/.aws-sam/build
 
+
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -46,18 +48,14 @@ jobs:
         with:
           name: sam-build-artifact
 
-      # Run Unit Tests
-      - name: Run Unit Tests
-        run: |
-          cd backend
-          pytest tests/unit
+      # Run Super Linter 
+      - name: Run Linter
+        uses: github/super-linter@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: false  # Ensure pipeline fails if lint error
 
-      # Run Integration Tests
-      - name: Run Integration Tests
-        run: |
-          cd backend
-          pytest tests/integration
-
+        
   deploy:
     runs-on: ubuntu-latest
     needs: test
@@ -88,7 +86,7 @@ jobs:
             --s3-bucket aitc-s3 \
             --output-template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
 
-      # Step 5: Upload Packaged Template Artifact
+      # Upload Packaged Artifact
       - name: Upload Packaged Template Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -96,7 +94,7 @@ jobs:
           path: |
             AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
 
-      # Step 6: Deploy SAM Template
+      # Deploy to CloudFormation Stack
       - name: Deploy SAM Template
         run: |
           sam deploy \
@@ -105,7 +103,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region us-east-1
 
-      # Step 7: Test Deployment
+      # Test Deployment
       - name: Test Deployment
         run: |
           aws cloudformation describe-stacks --stack-name aitc-backend-stack

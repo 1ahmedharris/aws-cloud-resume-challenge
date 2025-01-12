@@ -20,18 +20,33 @@ jobs:
         run: |
           sam validate --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
 
-      # Build SAM App
+
+      # Build and Package SAM Template
       - name: Build SAM Application
         run: |
-          cd AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
-          sam build
+          sam build --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml --output-template-file packaged-backend.yaml
 
-      # Create Artifact
+      # Create and Upload Artifact
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: sam-build-artifact
-          path: AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml/.aws-sam/build
+          path: ./packaged-backend.yaml  # Path to the SAM packaged template
+
+
+
+          # Build and Package SAM Template
+- name: Build SAM Application
+  run: |
+    sam build --template-file my-resume/backend/backend-iac.yml --output-template-file packaged-template.yaml
+
+# Create and Upload Artifact
+- name: Upload Build Artifact
+  uses: actions/upload-artifact@v4
+  with:
+    name: sam-build-artifact
+    path: ./packaged-template.yaml  # Path to the SAM packaged template
+
 
 
   test:
@@ -84,7 +99,7 @@ jobs:
           sam package \
             --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml \
             --s3-bucket aitc-s3 \
-            --output-template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
+            --output-template-file packaged-backend.yml
 
       # Load Packaged Artifact
       - name: Upload Packaged Template Artifact
@@ -92,13 +107,13 @@ jobs:
         with:
           name: sam-packaged-template
           path: |
-            AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
+            ./sam-build-artifact/packaged-backend.yaml
 
       # Deploy to CloudFormation Stack
       - name: Deploy SAM Template
         run: |
           sam deploy \
-            --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml \
+            --template-file ./sam-build-artifact/packaged-backend.yaml \
             --stack-name aitc-backend-stack \
             --capabilities CAPABILITY_IAM \
             --region us-east-1

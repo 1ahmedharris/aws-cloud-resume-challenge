@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Run on changes to files in '/frontend'
+      - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Run on changes to files in /frontend
   pull_request:
     branches:
       - main

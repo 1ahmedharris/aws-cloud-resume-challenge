@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: false  # Ensure pipeline fails if lint error
 
-      # Build frontend 
+      # Build application
       - name: Build Frontend
         run: |
           cd AWS-Cloud-Resume-Challenge/frontend

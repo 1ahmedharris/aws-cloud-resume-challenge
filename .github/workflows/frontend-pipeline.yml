@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Check out repository
+      # Check Out Repository
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
@@ -27,14 +27,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: false  # Ensure pipeline fails if lint error
 
-      # Build application
+      # Build Application
       - name: Build Frontend
         run: |
           cd AWS-Cloud-Resume-Challenge/frontend
           npm ci
           npm run build
 
-      # Create artifact for deploy
+      # Create Artifact
       - name: Upload Site Files
         uses: actions/upload-artifact@v4
         with:
@@ -46,18 +46,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Check out repository 
+      # Check Out Repository 
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Download build artifact from build job
+      # Download Artifact From Build Job
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: site-files
           path: ./site-files
 
-      # Login to AWS
+      # Login To AWS
       - name: AWS Login
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -65,7 +65,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Deploy frontend to S3
+      # Deploy Frontend to S3
       - name: Deploy Frontend
         run: |
           aws s3 sync ./site-files s3://aitc-s3

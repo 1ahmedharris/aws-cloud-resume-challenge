@@ -30,29 +30,27 @@ jobs:
       # Step 3: Build Frontend 
       - name: Build Frontend
         run: |
-          cd AWS-Cloud-Resume-Challenge
-/frontend
+          cd AWS-Cloud-Resume-Challenge/frontend
           npm ci
           npm run build
 
-      # Step 4: Upload Files as Artifact for Deploy
+      # Step 4: Create Artifact for Deploy
       - name: Upload Site Files
         uses: actions/upload-artifact@v4
         with:
           name: site-files
           path: |
-            .AWS-Cloud-Resume-Challenge
-/frontend/build 
+            .AWS-Cloud-Resume-Challenge/frontend/build 
             
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Step 1: Check out the repository again
+      # Step 1: Check out repository 
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Step 2: Download the build artifact from the build job
+      # Step 2: Download the build artifact from build job
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
@@ -67,7 +65,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Step 4: Deploy frontend via IaC (Updated to sync to S3)
+      # Step 4: Deploy frontend to S3
       - name: Deploy Frontend
         run: |
           aws s3 sync ./site-files s3://aitc-s3

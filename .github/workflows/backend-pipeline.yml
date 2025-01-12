@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Download Build Artifact
+      # Load Build Artifact
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Download Build Artifact
+      # Load Tested Artifact
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
@@ -86,7 +86,7 @@ jobs:
             --s3-bucket aitc-s3 \
             --output-template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
 
-      # Upload Packaged Artifact
+      # Load Packaged Artifact
       - name: Upload Packaged Template Artifact
         uses: actions/upload-artifact@v4
         with:

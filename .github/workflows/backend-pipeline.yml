@@ -1,16 +1,10 @@
-name: Deploy Backend 
+name: Deploy Backend to AWS
 on:
   push:
     branches:
       - main
     paths:
       - 'AWS-Cloud-Resume-Challenge/backend/**'  # Run on changes to /backend
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'AWS-Cloud-Resume-Challenge/backend/**' 
-
 
 jobs:
   build:

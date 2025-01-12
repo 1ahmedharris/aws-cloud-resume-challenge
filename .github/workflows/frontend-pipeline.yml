@@ -1,11 +1,11 @@
-name: frontend ci/cd pipeline
+name: deploy frontend to s3
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Only run on changes to files in '/frontend'
+      - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Run on changes to files in '/frontend'
   pull_request:
     branches:
       - main
@@ -16,28 +16,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the repository
+      # Step 1: Check out repository
       - name: Checkout Code
         uses: actions/checkout@v4.2
 
-      # Step 2: Run Super Linter on HTML/CSS/JavaScript Files
+      # Step 2: Run Super Linter 
       - name: Run Linter
         uses: github/super-linter@v7
         env:
-          VALIDATE_HTML: true
-          VALIDATE_CSS: true
-          VALIDATE_JSON: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: false  # Ensure it fails the pipeline if there’s a lint error
 
-      # Step 3: Upload Files as Artifact for Deploy
+      # Step 3: Build Frontend 
+      - name: Build Frontend
+        run: |
+          cd AWS-Cloud-Resume-Challenge
+/frontend
+          npm ci
+          npm run build
+
+      # Step 4: Upload Files as Artifact for Deploy
       - name: Upload Site Files
         uses: actions/upload-artifact@v4
         with:
           name: site-files
           path: |
-            AWS-Cloud-Resume-Challenge/frontend
-
+            .AWS-Cloud-Resume-Challenge
+/frontend/build 
+            
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -53,33 +59,18 @@ jobs:
           name: site-files
           path: ./site-files
 
-      # Step 3: Login 
-      - name: # AWS Login
-        uses: # aws/login@v2.2.0
+      # Step 3: Login to AWS
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          creds: ${{ secrets.AWS_CREDENTIALS }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      # Step 4: Deploy Infrastructure (DNS, CDN, and Storage Blob) via IaC
-      - name: Deploy Infrastructure
+      # Step 4: Deploy frontend via IaC (Updated to sync to S3)
+      - name: Deploy Frontend
         run: |
-          aws deployment group create --resource-group <resource-group> --template-file AWS-Cloud-Resume-Challenge/frontend/Iac/frontend-iac.yaml
-
-      # Step 5: Deploy Static Site to Storage Blob
-      - name: Deploy Static Site to Storage Blob
-        run: |
-          aws storage blob upload-batch \
-            --source ./site-files \
-            --destination '$web' \
-            --account-name ${{ account_name }}
-
-      # Step 6: Purge CloudFront CDN Endpoint
-      - name: Purge CDN Endpoint
-        run: |
-          aws cdn endpoint purge \
-            --resource-group <-resource-group> \
-            --profile-name <-cdn-profile> \
-            --name <-cdn-endpoint> \
-            --content-paths '/*'
+          aws s3 sync ./site-files s3://aitc-s3
 
   smoke-test:
     runs-on: ubuntu-latest
@@ -87,7 +78,8 @@ jobs:
     steps:
       # Step 1: Run Cypress Tests
       - name: Run Smoke Tests
-        uses: cypress-io/github-action@v6.7.5
+        uses: cypress-io/github-action@v4
         with:
-          config: "baseUrl=https://ahmedharrisresume.com"
-      # Ensure Cypress tests cover key functionality and elements on site
+          browser: chrome
+          headless: true
+          config-file: cypress.json

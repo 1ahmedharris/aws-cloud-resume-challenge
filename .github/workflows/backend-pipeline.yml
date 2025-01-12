@@ -87,5 +87,3 @@ deploy:
           browser: chrome
           headless: true
           config-file: cypress.json
-          config: "baseUrl=https://ahmedharrisresume.com"
-          config: "baseUrl=https://ahmedharrisdevops.com"

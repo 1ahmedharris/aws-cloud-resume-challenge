@@ -5,7 +5,7 @@ Check it out here: [ahmedharrisdevops.com](https://ahmedharrisdevops.com)
 
 
 ## **Overview**
-This project is my resume written in HTML and hosted in the cloud, using AWS S3 website hosting. Inspired by the [Cloud Resume Challenge](https://cloudresumechallenge.dev/docs/the-challenge/aws/). The challenge was a great way for me to get hands on experience building cloud native applications,  configuring and deploying cloud infrastructure, and designing CI/CD pipelines.
+This project is my resume written in HTML and hosted in the cloud, using AWS S3 web hosting. Inspired by the [Cloud Resume Challenge](https://cloudresumechallenge.dev/docs/the-challenge/aws/). The challenge was a great way for me to get hands on experience building cloud native applications,  configuring and deploying cloud infrastructure, and designing CI/CD pipelines.
 
 
 

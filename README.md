@@ -10,7 +10,7 @@ This project is my resume written in HTML and hosted in the cloud, using AWS S3 
 
 
 ## **Technologies/Tools used**
-* Cloud: AWS, Route 53, CloudFront, S3, DynamoDB, Lamba 
+* Cloud: AWS, Route 53, CloudFront, S3, DynamoDB, Lamba, CloudWatch
 * IaC: AWS CloudFormation
 * Version Control: Git
 * CI/CD: GitHub Actions

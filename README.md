@@ -24,6 +24,7 @@ This project is my resume written in HTML and hosted in the cloud, using AWS S3 
 * API Gateway triggers Python Lambda function, retrieving and incrementing visitor count in DynamoDB.
 * GitHub Actions frontend CI/CD pipeline automatically deploys changes to HTML, CSS, and images into S3 bucket. Then refreshes CloudFront caches.
 * GitHub Actions backend CI/CD pipeline automatically deploys Python Lamba Function & DynamoDB to AWS.
+* Utilized CloudWatch monitoring and logging to track services performance.
 
 
 

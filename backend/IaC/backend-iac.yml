@@ -20,7 +20,7 @@ Resources:
         Variables:
           TABLE_NAME: visitor-count-table
 
-  # Define the DynamoDB Table
+  # Define DynamoDB Table
   MyDynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -33,13 +33,13 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
       
-# Output for the Lambda Function
+# Output for Lambda Function
 Outputs:
   MyLambdaFunctionArn:
     Description: "ARN of the deployed Lambda function"
     Value: !GetAtt MyPythonFunction.Arn
 
-  # Output for the DynamoDB Table
+  # Output for DynamoDB Table
   DynamoDBTableName:
     Description: "Name of the DynamoDB Table"
     Value: !Ref visitor-count-table

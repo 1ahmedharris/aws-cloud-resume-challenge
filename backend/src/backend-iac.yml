@@ -33,7 +33,7 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
       
-# Output for Lambda Function
+# Output for Python Lambda Function
 Outputs:
   MyLambdaFunctionArn:
     Description: "ARN of the deployed Lambda function"

@@ -76,7 +76,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       # Package SAM Template
       - name: Package SAM Template
@@ -91,11 +91,11 @@ jobs:
         run: |
           sam deploy \
             --template-file ./sam-build-artifact/packaged-backend.yaml \
-            --stack-name aitc-backend-stack \
+            --stack-name ${{ secrets.CF_STACK }} \
             --capabilities CAPABILITY_IAM \
-            --region us-east-1
+            --region ${{ secrets.AWS_REGION }}
 
       # Test Deployment
       - name: Test Deployment
         run: |
-          aws cloudformation describe-stacks --stack-name aitc-backend-stack
+          aws cloudformation describe-stacks --stack-name ${{ secrets.CF_STACK }}

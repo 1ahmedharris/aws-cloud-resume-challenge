@@ -83,7 +83,7 @@ jobs:
         run: |
           sam package \
             --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml \
-            --s3-bucket aitc-s3 \
+            --s3-bucket ${{ secrets.S3_BUCKET }} \
             --output-template-file packaged-backend.yml
 
       # Deploy to CloudFormation Stack

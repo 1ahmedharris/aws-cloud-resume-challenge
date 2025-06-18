@@ -1,101 +1,101 @@
-name: Deploy Backend to AWS
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'AWS-Cloud-Resume-Challenge/backend/**'  # Run on changes to /backend
+# name: Deploy Backend to AWS
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'AWS-Cloud-Resume-Challenge/backend/**'  # Run on changes to /backend
 
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout Repository
-      - name: Checkout Code
-        uses: actions/checkout@v4.2
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       # Checkout Repository
+#       - name: Checkout Code
+#         uses: actions/checkout@v4.2
 
-      # Validate SAM Template
-      - name: Validate SAM Template
-        run: |
-          sam validate --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
+#       # Validate SAM Template
+#       - name: Validate SAM Template
+#         run: |
+#           sam validate --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml
 
-      # Build and Package SAM Template
-      - name: Build SAM Application
-        run: |
-          sam build --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml --output-template-file packaged-backend.yaml
+#       # Build and Package SAM Template
+#       - name: Build SAM Application
+#         run: |
+#           sam build --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml --output-template-file packaged-backend.yaml
 
-      # Create and Upload Artifact
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: sam-build-artifact
-          path: ./packaged-backend.yaml  # Path to the SAM packaged template
+#       # Create and Upload Artifact
+#       - name: Upload Build Artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: sam-build-artifact
+#           path: ./packaged-backend.yaml  # Path to the SAM packaged template
 
 
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # Checkout Repository
-      - name: Checkout Code
-        uses: actions/checkout@v4.2
+#   test:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     steps:
+#       # Checkout Repository
+#       - name: Checkout Code
+#         uses: actions/checkout@v4.2
 
-      # Load Build Artifact
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: sam-build-artifact
+#       # Load Build Artifact
+#       - name: Download Build Artifact
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: sam-build-artifact
 
-      # Run Super Linter 
-      - name: Run Linter
-        uses: github/super-linter@v7
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: false  # Ensure pipeline fails if lint error
+#       # Run Super Linter 
+#       - name: Run Linter
+#         uses: github/super-linter@v7
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         continue-on-error: false  # Ensure pipeline fails if lint error
 
         
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      # Checkout Repository
-      - name: Checkout Code
-        uses: actions/checkout@v4.2
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: test
+#     steps:
+#       # Checkout Repository
+#       - name: Checkout Code
+#         uses: actions/checkout@v4.2
 
-      # Load Tested Artifact
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: sam-build-artifact
+#       # Load Tested Artifact
+#       - name: Download Build Artifact
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: sam-build-artifact
 
-      # Configure AWS CLI
-      - name: Configure AWS CLI
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+#       # Configure AWS CLI
+#       - name: Configure AWS CLI
+#         uses: aws-actions/configure-aws-credentials@v3
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Package SAM Template
-      - name: Package SAM Template
-        run: |
-          sam package \
-            --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml \
-            --s3-bucket ${{ secrets.S3_BUCKET }} \
-            --output-template-file packaged-backend.yml
+#       # Package SAM Template
+#       - name: Package SAM Template
+#         run: |
+#           sam package \
+#             --template-file AWS-Cloud-Resume-Challenge/backend/IaC/backend-iac.yml \
+#             --s3-bucket ${{ secrets.S3_BUCKET }} \
+#             --output-template-file packaged-backend.yml
 
-      # Deploy to CloudFormation Stack
-      - name: Deploy SAM Template
-        run: |
-          sam deploy \
-            --template-file ./sam-build-artifact/packaged-backend.yaml \
-            --stack-name ${{ secrets.CF_STACK }} \
-            --capabilities CAPABILITY_IAM \
-            --region ${{ secrets.AWS_REGION }}
+#       # Deploy to CloudFormation Stack
+#       - name: Deploy SAM Template
+#         run: |
+#           sam deploy \
+#             --template-file ./sam-build-artifact/packaged-backend.yaml \
+#             --stack-name ${{ secrets.CF_STACK }} \
+#             --capabilities CAPABILITY_IAM \
+#             --region ${{ secrets.AWS_REGION }}
 
-      # Test Deployment
-      - name: Test Deployment
-        run: |
-          aws cloudformation describe-stacks --stack-name ${{ secrets.CF_STACK }}
+#       # Test Deployment
+#       - name: Test Deployment
+#         run: |
+#           aws cloudformation describe-stacks --stack-name ${{ secrets.CF_STACK }}

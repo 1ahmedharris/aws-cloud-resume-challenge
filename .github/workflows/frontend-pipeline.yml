@@ -1,96 +1,96 @@
-name: Deploy Frontend To S3
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Run on changes to /frontend
+# name: Deploy Frontend To S3
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'AWS-Cloud-Resume-Challenge/frontend/**'  # Run on changes to /frontend
 
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      # Check Out Repository
-      - name: Checkout Code
-        uses: actions/checkout@v4.2
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       # Check Out Repository
+#       - name: Checkout Code
+#         uses: actions/checkout@v4.2
 
-      # Build Application
-      - name: Build Frontend
-        run: |
-          cd AWS-Cloud-Resume-Challenge/frontend
-          npm ci
-          npm run build
+#       # Build Application
+#       - name: Build Frontend
+#         run: |
+#           cd AWS-Cloud-Resume-Challenge/frontend
+#           npm ci
+#           npm run build
 
-      # Create Artifact
-      - name: Upload Site Files
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-files
-          path: |
-            .AWS-Cloud-Resume-Challenge/frontend/build 
+#       # Create Artifact
+#       - name: Upload Site Files
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: site-files
+#           path: |
+#             .AWS-Cloud-Resume-Challenge/frontend/build 
 
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # Checkout Repository
-      - name: Checkout Code
-        uses: actions/checkout@v4.2
+#   test:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     steps:
+#       # Checkout Repository
+#       - name: Checkout Code
+#         uses: actions/checkout@v4.2
 
-      # Load Build Artifact
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: |
-            site-files
+#       # Load Build Artifact
+#       - name: Download Build Artifact
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: |
+#             site-files
 
-      # Run Super Linter 
-      - name: Run Linter
-        uses: github/super-linter@v7
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: false  # Ensure pipeline fails if lint error
+#       # Run Super Linter 
+#       - name: Run Linter
+#         uses: github/super-linter@v7
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         continue-on-error: false  # Ensure pipeline fails if lint error
  
             
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # Check Out Repository 
-      - name: Checkout Code
-        uses: actions/checkout@v4.2
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     steps:
+#       # Check Out Repository 
+#       - name: Checkout Code
+#         uses: actions/checkout@v4.2
 
-      # Download Tested Artifact
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-files
-          path: ./site-files
+#       # Download Tested Artifact
+#       - name: Download Build Artifact
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: site-files
+#           path: ./site-files
 
-      # Login To AWS
-      - name: AWS Login
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+#       # Login To AWS
+#       - name: AWS Login
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
 
-      # Deploy Frontend to S3
-      - name: Deploy Frontend
-        run: |
-          aws s3 sync ./site-files s3://aitc-s3
+#       # Deploy Frontend to S3
+#       - name: Deploy Frontend
+#         run: |
+#           aws s3 sync ./site-files s3://aitc-s3
 
 
-  smoke-test:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      # Run Cypress Tests
-      - name: Run Smoke Tests
-        uses: cypress-io/github-action@v4
-        with:
-          browser: chrome
-          headless: true
-          config-file: cypress.json
+#   smoke-test:
+#     runs-on: ubuntu-latest
+#     needs: deploy
+#     steps:
+#       # Run Cypress Tests
+#       - name: Run Smoke Tests
+#         uses: cypress-io/github-action@v4
+#         with:
+#           browser: chrome
+#           headless: true
+#           config-file: cypress.json

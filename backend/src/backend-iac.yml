@@ -20,6 +20,7 @@ Resources:
         Variables:
           TABLE_NAME: visitor-count-table
 
+
   # Define DynamoDB Table
   MyDynamoDBTable:
     Type: AWS::DynamoDB::Table
@@ -32,6 +33,7 @@ Resources:
         - AttributeName: id
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
+
       
 # Output for Lambda Function
 Outputs:
